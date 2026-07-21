@@ -1,0 +1,195 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    background: #f0f2f5;
+    color: #1a1a2e;
+    padding: 20px;
+}
+
+.container {
+    max-width: 1000px;
+    margin: 0 auto;
+    background: white;
+    padding: 30px;
+    border-radius: 16px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+}
+
+header h1 {
+    font-size: 28px;
+    margin-bottom: 4px;
+}
+header p {
+    color: #666;
+    margin-bottom: 20px;
+}
+
+.stats {
+    display: flex;
+    gap: 30px;
+    background: #f7f8fc;
+    padding: 12px 20px;
+    border-radius: 10px;
+    margin-bottom: 16px;
+}
+.stats strong {
+    color: #4a6cf7;
+    font-size: 20px;
+}
+
+.tabs {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 16px;
+    flex-wrap: wrap;
+}
+.tab {
+    padding: 6px 18px;
+    border: none;
+    border-radius: 20px;
+    background: #e8ecf1;
+    cursor: pointer;
+    font-size: 14px;
+    transition: 0.2s;
+}
+.tab.active {
+    background: #4a6cf7;
+    color: white;
+}
+.tab:hover {
+    opacity: 0.8;
+}
+
+.add-form {
+    background: #f7f8fc;
+    padding: 16px 20px;
+    border-radius: 12px;
+    margin-bottom: 24px;
+}
+.add-form h3 {
+    font-size: 15px;
+    margin-bottom: 10px;
+}
+.form-row {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+.form-row input {
+    padding: 8px 12px;
+    border: 1px solid #d0d5dd;
+    border-radius: 8px;
+    font-size: 14px;
+    flex: 1;
+    min-width: 100px;
+}
+.form-row input:focus {
+    outline: none;
+    border-color: #4a6cf7;
+}
+#addBtn {
+    padding: 8px 24px;
+    background: #4a6cf7;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 14px;
+}
+#addBtn:hover {
+    background: #3a5cd5;
+}
+
+.card-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 16px;
+}
+.card {
+    background: #fafbfc;
+    border: 1px solid #e8ecf1;
+    border-radius: 12px;
+    padding: 16px;
+    transition: 0.2s;
+}
+.card:hover {
+    box-shadow: 0 4px 12px rgba(0,0,0,0.06);
+}
+.card h3 {
+    font-size: 16px;
+    margin-bottom: 6px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+.card .ep-info {
+    font-size: 14px;
+    color: #555;
+    margin-bottom: 8px;
+}
+.card .progress-bar {
+    width: 100%;
+    height: 6px;
+    background: #e8ecf1;
+    border-radius: 4px;
+    overflow: hidden;
+    margin-bottom: 10px;
+}
+.card .progress-fill {
+    height: 100%;
+    background: #4a6cf7;
+    border-radius: 4px;
+    transition: width 0.3s ease;
+}
+.card .card-actions {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 8px;
+}
+.card .card-actions button {
+    flex: 1;
+    padding: 5px 0;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 13px;
+}
+.btn-increase {
+    background: #e8f5e9;
+    color: #2e7d32;
+}
+.btn-increase:hover {
+    background: #c8e6c9;
+}
+.btn-delete {
+    background: #fce4ec;
+    color: #c62828;
+}
+.btn-delete:hover {
+    background: #f8bbd0;
+}
+.card .status-tag {
+    display: inline-block;
+    font-size: 12px;
+    padding: 2px 12px;
+    border-radius: 12px;
+    background: #e8ecf1;
+    color: #555;
+}
+.status-tag.watching { background: #bbdefb; color: #0d47a1; }
+.status-tag.plan { background: #fff3e0; color: #e65100; }
+.status-tag.completed { background: #c8e6c9; color: #1b5e20; }
+
+.empty-state {
+    text-align: center;
+    color: #999;
+    padding: 40px 0;
+    font-size: 16px;
+    grid-column: 1 / -1;
+}

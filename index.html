@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>📺 追番进度小管家</title>
+    <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>📺 追番进度小管家</h1>
+            <p>再也不用担心忘记看到哪一集了！</p>
+        </header>
+
+        <!-- 统计看板 -->
+        <div class="stats">
+            <span>📚 总计：<strong id="totalCount">0</strong> 部</span>
+            <span>⏳ 在看：<strong id="watchingCount">0</strong> 部</span>
+        </div>
+
+        <!-- Tab 筛选栏 -->
+        <div class="tabs">
+            <button class="tab active" data-status="all">📋 全部</button>
+            <button class="tab" data-status="watching">⏳ 在看</button>
+            <button class="tab" data-status="plan">📅 想看</button>
+            <button class="tab" data-status="completed">✅ 已完结</button>
+        </div>
+
+        <!-- 添加剧集表单 -->
+        <div class="add-form">
+            <h3>➕ 添加新番</h3>
+            <div class="form-row">
+                <input type="text" id="animeName" placeholder="剧名（如：葬送的芙莉莲）" />
+                <input type="number" id="totalEp" placeholder="总集数" min="1" />
+                <input type="number" id="currentEp" placeholder="当前集数" min="0" value="0" />
+                <button id="addBtn">➕ 添加</button>
+            </div>
+        </div>
+
+        <!-- 卡片列表 -->
+        <div id="cardList" class="card-grid"></div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
