@@ -1,0 +1,33 @@
+name: PR 自动化检查
+
+on:
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  check-html:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: 安装 HTML 检查工具
+        run: sudo apt-get install -y tidy
+      
+      - name: 检查 HTML 语法
+        run: |
+          tidy -eq index.html 2>&1 | tee check.log
+          if grep -q "Error" check.log; then
+            echo "❌ HTML 存在语法错误，请修复！"
+            exit 1
+          fi
+          echo "✅ HTML 语法检查通过！"
+      
+      - name: 验证核心文件存在
+        run: |
+          for file in index.html style.css script.js; do
+            if [ ! -f "$file" ]; then
+              echo "❌ 缺少 $file"
+              exit 1
+            fi
+          done
+          echo "✅ 所有核心文件完整！"
