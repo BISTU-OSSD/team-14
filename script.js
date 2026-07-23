@@ -201,7 +201,8 @@ document.addEventListener('DOMContentLoaded', setupTabs);
 // 监听数据变化：只要数据变了（添加、+1、删除），就自动重新渲染列表和统计
 document.addEventListener('dataChanged', function() {
     const list = window.getAnimeList();      // 成员A：获取数据
-    renderCards(list);                       // 成员C：渲染卡片
+    const filtered = getFilteredList(list);
+    renderCards(filtered);                       // 成员C：渲染卡片
     updateStats(list);                       // 成员D：更新统计
 });
 
@@ -216,7 +217,8 @@ document.addEventListener('filterChanged', function() {
 // 页面加载时的初始化（替换掉旧的只打印日志的占位符）
 function renderAll() {
     const list = window.getAnimeList();      // 成员A：获取数据
-    renderCards(list);                       // 成员C：第一次显示所有卡片
+    const filtered = getFilteredList(list);
+    renderCards(filtered);                       // 成员C：第一次显示所有卡片
     updateStats(list);                       // 成员D：第一次更新统计数字
 }
 
