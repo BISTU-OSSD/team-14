@@ -80,8 +80,8 @@ function setupAddForm() {
         totalInput.value = '';
         currentInput.value = '0';
 
-        // 触发全局刷新
-        window.dispatchEvent(new Event('dataChanged'));
+        // 直接刷新
+        refreshUI();
     });
 }
 
@@ -151,7 +151,7 @@ function handleIncrease(e) {
         item.current = Math.min(item.current + 1, item.total);
         item.status = window.calcStatus(item.current, item.total);
         window.saveAnimeList(list);
-        window.dispatchEvent(new Event('dataChanged'));
+        refreshUI();
     }
 }
 
@@ -161,7 +161,7 @@ function handleDelete(e) {
     let list = window.getAnimeList();
     list = list.filter(d => d.id !== id);
     window.saveAnimeList(list);
-    window.dispatchEvent(new Event('dataChanged'));
+    refreshUI();
 }
 
 document.addEventListener('increaseEpisode', handleIncrease);
@@ -220,6 +220,12 @@ function renderAll() {
     updateStats(list);                       // 成员D：第一次更新统计数字
 }
 
+//  刷新界面函数：供添加、+1、删除后调用
+function refreshUI() {
+    const list = window.getAnimeList();      // 获取最新数据
+    renderCards(list);                       // 重新渲染卡片
+    updateStats(list);                       // 更新统计数字
+}
 // 页面加载时执行
 document.addEventListener('DOMContentLoaded', renderAll);
 document.addEventListener('DOMContentLoaded', setupAddForm);
