@@ -209,3 +209,30 @@ function handleDelete(e) {
 document.addEventListener('increaseEpisode', handleIncrease);
 document.addEventListener('deleteAnime', handleDelete);
 
+
+
+let currentFilter = 'all';
+
+function setupTabs() {
+    document.querySelectorAll('.tab').forEach(tab => {
+        tab.addEventListener('click', function() {
+            document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+            this.classList.add('active');
+            currentFilter = this.dataset.status;
+            window.dispatchEvent(new Event('filterChanged'));
+        });
+    });
+}
+
+function getFilteredList(list) {
+    if (currentFilter === 'all') return list;
+    return list.filter(item => item.status === currentFilter);
+}
+
+function updateStats(list) {
+    document.getElementById('totalCount').innerText = list.length;
+    const watching = list.filter(item => item.status === 'watching').length;
+    document.getElementById('watchingCount').innerText = watching;
+}
+
+document.addEventListener('DOMContentLoaded', setupTabs);
