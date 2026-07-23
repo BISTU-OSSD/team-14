@@ -1,7 +1,5 @@
-// ============================================================
+
 //  第一部分：数据层（localStorage 存储引擎）
-//  负责人：成员A
-// ============================================================
 
 const STORAGE_KEY = 'animeTracker';
 
@@ -87,7 +85,7 @@ function setupAddForm() {
     });
 }
 
-document.addEventListener('DOMContentLoaded', setupAddForm);
+
 //  第三部分：卡片渲染与进度更新
 
 function renderCards(list) {
@@ -224,12 +222,10 @@ function renderAll() {
 
 // 页面加载时执行
 document.addEventListener('DOMContentLoaded', renderAll);
+document.addEventListener('DOMContentLoaded', setupAddForm);
+document.addEventListener('DOMContentLoaded', setupTabs);
 
 
 
-function renderAll() {
-    console.log('✅ 页面已加载，等待各模块合并完成...');
-}
 
-document.addEventListener('DOMContentLoaded', renderAll);
 
