@@ -31,7 +31,7 @@ function saveAnimeList(list) {
 
 // 生成唯一ID
 function generateId() {
-    return Date.now() + Math.random() * 1000;
+    return Date.now() + Math.floor(Math.random() * 1000);
 }
 
 // 计算状态
@@ -125,7 +125,7 @@ function renderCards(list) {
     container.querySelectorAll('.btn-increase').forEach(btn => {
         btn.addEventListener('click', function() {
             const card = this.closest('.card');
-            const id = parseFloat(card.dataset.id);
+            const id = Number(card.dataset.id);
             window.dispatchEvent(new CustomEvent('increaseEpisode', { detail: { id } }));
         });
     });
@@ -134,7 +134,7 @@ function renderCards(list) {
     container.querySelectorAll('.btn-delete').forEach(btn => {
         btn.addEventListener('click', function() {
             const card = this.closest('.card');
-            const id = parseFloat(card.dataset.id);
+            const id = Number(card.dataset.id);
             if (confirm('确定要删除这部番剧吗？')) {
                 window.dispatchEvent(new CustomEvent('deleteAnime', { detail: { id } }));
             }
@@ -223,7 +223,8 @@ function renderAll() {
 //  刷新界面函数：供添加、+1、删除后调用
 function refreshUI() {
     const list = window.getAnimeList();      // 获取最新数据
-    renderCards(list);                       // 重新渲染卡片
+    const filtered = getFilteredList(list);  
+    renderCards(filtered);                       // 重新渲染卡片
     updateStats(list);                       // 更新统计数字
 }
 // 页面加载时执行
