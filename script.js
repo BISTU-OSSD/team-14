@@ -126,7 +126,8 @@ function renderCards(list) {
         btn.addEventListener('click', function() {
             const card = this.closest('.card');
             const id = Number(card.dataset.id);
-            window.dispatchEvent(new CustomEvent('increaseEpisode', { detail: { id } }));
+            console.log('✅ +1 按钮被点击，id =', id);  // 调试日志
+            document.dispatchEvent(new CustomEvent('increaseEpisode', { detail: { id } }));
         });
     });
 
@@ -136,7 +137,8 @@ function renderCards(list) {
             const card = this.closest('.card');
             const id = Number(card.dataset.id);
             if (confirm('确定要删除这部番剧吗？')) {
-                window.dispatchEvent(new CustomEvent('deleteAnime', { detail: { id } }));
+                console.log('删除确认，id =', id);  // 调试日志
+                document.dispatchEvent(new CustomEvent('deleteAnime', { detail: { id } }));
             }
         });
     });
@@ -145,22 +147,34 @@ function renderCards(list) {
 // 处理 +1
 function handleIncrease(e) {
     const id = e.detail.id;
+    console.log('handleIncrease 收到事件，id =', id);
     const list = window.getAnimeList();
     const item = list.find(d => d.id === id);
     if (item) {
+        console.log('找到剧集:', item.name, '当前集数:', item.current);
         item.current = Math.min(item.current + 1, item.total);
         item.status = window.calcStatus(item.current, item.total);
         window.saveAnimeList(list);
+        console.log('更新后集数:', item.current);
         refreshUI();
+        } else {
+        console.warn('⚠️ 未找到 id 为', id, '的剧集');
     }
 }
 
 // 处理删除
 function handleDelete(e) {
     const id = e.detail.id;
+    console.log('handleDelete 收到事件，id =', id);
     let list = window.getAnimeList();
+    const before = list.length;
     list = list.filter(d => d.id !== id);
+    if (list.length === before) {
+        console.warn('⚠️ 未找到 id 为', id, '的剧集，删除失败');
+        return;
+    }
     window.saveAnimeList(list);
+    console.log('删除成功，剩余:', list.length, '部');
     refreshUI();
 }
 
@@ -177,7 +191,7 @@ function setupTabs() {
             document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
             this.classList.add('active');
             currentFilter = this.dataset.status;
-            window.dispatchEvent(new Event('filterChanged'));
+            refreshUI();
         });
     });
 }
@@ -193,41 +207,20 @@ function updateStats(list) {
     document.getElementById('watchingCount').innerText = watching;
 }
 
-document.addEventListener('DOMContentLoaded', setupTabs);
-
 
 // 启动器
 
-// 监听数据变化：只要数据变了（添加、+1、删除），就自动重新渲染列表和统计
-document.addEventListener('dataChanged', function() {
-    const list = window.getAnimeList();      // 成员A：获取数据
-    const filtered = getFilteredList(list);
-    renderCards(filtered);                       // 成员C：渲染卡片
-    updateStats(list);                       // 成员D：更新统计
-});
-
-// 监听筛选变化：点击 Tab 时，重新渲染筛选后的列表
-document.addEventListener('filterChanged', function() {
-    const list = window.getAnimeList();      // 成员A：获取数据
-    const filtered = getFilteredList(list);  // 成员D：按当前 Tab 筛选
-    renderCards(filtered);                   // 成员C：渲染筛选后的卡片
-    updateStats(list);                       // 成员D：更新统计（总数不变）
-});
-
-// 页面加载时的初始化（替换掉旧的只打印日志的占位符）
-function renderAll() {
-    const list = window.getAnimeList();      // 成员A：获取数据
-    const filtered = getFilteredList(list);
-    renderCards(filtered);                       // 成员C：第一次显示所有卡片
-    updateStats(list);                       // 成员D：第一次更新统计数字
+function refreshUI() {
+    console.log('refreshUI 被调用');
+    const list = window.getAnimeList();
+    const filtered = getFilteredList(list);  // 保持当前 Tab 筛选
+    renderCards(filtered);
+    updateStats(list);
 }
 
-//  刷新界面函数：供添加、+1、删除后调用
-function refreshUI() {
-    const list = window.getAnimeList();      // 获取最新数据
-    const filtered = getFilteredList(list);  
-    renderCards(filtered);                       // 重新渲染卡片
-    updateStats(list);                       // 更新统计数字
+function renderAll() {
+    console.log('页面加载完成，初始化...');
+    refreshUI();  // 直接调用 refreshUI
 }
 // 页面加载时执行
 document.addEventListener('DOMContentLoaded', renderAll);
