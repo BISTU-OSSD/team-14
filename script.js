@@ -91,3 +91,40 @@ window.getAnimeList = getAnimeList;
 window.saveAnimeList = saveAnimeList;
 window.generateId = generateId;
 window.calcStatus = calcStatus;
+
+
+function setupAddForm() {
+    const addBtn = document.getElementById('addBtn');
+    const nameInput = document.getElementById('animeName');
+    const totalInput = document.getElementById('totalEp');
+    const currentInput = document.getElementById('currentEp');
+
+    addBtn.addEventListener('click', function() {
+        const name = nameInput.value.trim();
+        const total = parseInt(totalInput.value);
+        const current = parseInt(currentInput.value) || 0;
+
+        if (!name) { alert('❌ 请输入剧名！'); return; }
+        if (!total || total < 1) { alert('❌ 请输入有效的总集数（≥1）！'); return; }
+
+        const list = window.getAnimeList();
+        const newItem = {
+            id: window.generateId(),
+            name: name,
+            total: total,
+            current: current,
+            status: window.calcStatus(current, total),
+        };
+        list.push(newItem);
+        window.saveAnimeList(list);
+
+        nameInput.value = '';
+        totalInput.value = '';
+        currentInput.value = '0';
+
+        // 触发全局刷新
+        window.dispatchEvent(new Event('dataChanged'));
+    });
+}
+
+document.addEventListener('DOMContentLoaded', setupAddForm);
