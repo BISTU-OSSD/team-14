@@ -128,3 +128,84 @@ function setupAddForm() {
 }
 
 document.addEventListener('DOMContentLoaded', setupAddForm);
+
+
+function renderCards(list) {
+    const container = document.getElementById('cardList');
+
+    if (!list || list.length === 0) {
+        container.innerHTML = '<div class="empty-state">🎬 还没有剧集，赶快添加一部吧！</div>';
+        return;
+    }
+
+    let html = '';
+    list.forEach(item => {
+        const progress = Math.min(Math.round((item.current / item.total) * 100), 100);
+        const statusMap = {
+            'watching': '<span class="status-tag watching">⏳ 在看</span>',
+            'plan': '<span class="status-tag plan">📅 想看</span>',
+            'completed': '<span class="status-tag completed">✅ 已完结</span>'
+        };
+        html += `
+            <div class="card" data-id="${item.id}">
+                <h3 title="${item.name}">${item.name}</h3>
+                <div class="ep-info">📺 第 ${item.current} 集 / 共 ${item.total} 集</div>
+                <div class="progress-bar">
+                    <div class="progress-fill" style="width:${progress}%;"></div>
+                </div>
+                <div class="card-actions">
+                    <button class="btn-increase">➕ 看了一集</button>
+                    <button class="btn-delete">🗑️ 删除</button>
+                </div>
+                <div>${statusMap[item.status] || item.status}</div>
+            </div>
+        `;
+    });
+    container.innerHTML = html;
+
+    // 事件委托：+1
+    container.querySelectorAll('.btn-increase').forEach(btn => {
+        btn.addEventListener('click', function() {
+            const card = this.closest('.card');
+            const id = parseFloat(card.dataset.id);
+            window.dispatchEvent(new CustomEvent('increaseEpisode', { detail: { id } }));
+        });
+    });
+
+    // 事件委托：删除
+    container.querySelectorAll('.btn-delete').forEach(btn => {
+        btn.addEventListener('click', function() {
+            const card = this.closest('.card');
+            const id = parseFloat(card.dataset.id);
+            if (confirm('确定要删除这部番吗？')) {
+                window.dispatchEvent(new CustomEvent('deleteAnime', { detail: { id } }));
+            }
+        });
+    });
+}
+
+// 处理 +1
+function handleIncrease(e) {
+    const id = e.detail.id;
+    const list = window.getAnimeList();
+    const item = list.find(d => d.id === id);
+    if (item) {
+        item.current = Math.min(item.current + 1, item.total);
+        item.status = window.calcStatus(item.current, item.total);
+        window.saveAnimeList(list);
+        window.dispatchEvent(new Event('dataChanged'));
+    }
+}
+
+// 处理删除
+function handleDelete(e) {
+    const id = e.detail.id;
+    let list = window.getAnimeList();
+    list = list.filter(d => d.id !== id);
+    window.saveAnimeList(list);
+    window.dispatchEvent(new Event('dataChanged'));
+}
+
+document.addEventListener('increaseEpisode', handleIncrease);
+document.addEventListener('deleteAnime', handleDelete);
+
