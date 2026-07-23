@@ -43,10 +43,33 @@ function calcStatus(current, total) {
     return 'watching';
 }
 
-// ============================================================
-//  第二部分：渲染与事件绑定（后续由各成员补充）
-//  当前仅为占位，合并后会被完整替换
-// ============================================================
+
+// 监听数据变化：只要数据变了（添加、+1、删除），就自动重新渲染列表和统计
+document.addEventListener('dataChanged', function() {
+    const list = window.getAnimeList();      // 成员A：获取数据
+    renderCards(list);                       // 成员C：渲染卡片
+    updateStats(list);                       // 成员D：更新统计
+});
+
+// 监听筛选变化：点击 Tab 时，重新渲染筛选后的列表
+document.addEventListener('filterChanged', function() {
+    const list = window.getAnimeList();      // 成员A：获取数据
+    const filtered = getFilteredList(list);  // 成员D：按当前 Tab 筛选
+    renderCards(filtered);                   // 成员C：渲染筛选后的卡片
+    updateStats(list);                       // 成员D：更新统计（总数不变）
+});
+
+// 页面加载时的初始化（替换掉旧的只打印日志的占位符）
+function renderAll() {
+    const list = window.getAnimeList();      // 成员A：获取数据
+    renderCards(list);                       // 成员C：第一次显示所有卡片
+    updateStats(list);                       // 成员D：第一次更新统计数字
+}
+
+// 页面加载时执行
+document.addEventListener('DOMContentLoaded', renderAll);
+
+
 
 function renderAll() {
     console.log('✅ 页面已加载，等待各模块合并完成...');
