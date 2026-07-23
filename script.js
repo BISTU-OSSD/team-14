@@ -5,7 +5,7 @@
 
 const STORAGE_KEY = 'animeTracker';
 
-// 默认示例数据
+// 默认示例
 const DEFAULT_DATA = [
     { id: 1, name: '葬送的芙莉莲', total: 28, current: 12, status: 'watching' },
     { id: 2, name: '迷宫饭', total: 24, current: 24, status: 'completed' },
@@ -44,76 +44,13 @@ function calcStatus(current, total) {
 }
 
 
-// 监听数据变化：只要数据变了（添加、+1、删除），就自动重新渲染列表和统计
-document.addEventListener('dataChanged', function() {
-    const list = window.getAnimeList();      // 成员A：获取数据
-    renderCards(list);                       // 成员C：渲染卡片
-    updateStats(list);                       // 成员D：更新统计
-});
-
-// 监听筛选变化：点击 Tab 时，重新渲染筛选后的列表
-document.addEventListener('filterChanged', function() {
-    const list = window.getAnimeList();      // 成员A：获取数据
-    const filtered = getFilteredList(list);  // 成员D：按当前 Tab 筛选
-    renderCards(filtered);                   // 成员C：渲染筛选后的卡片
-    updateStats(list);                       // 成员D：更新统计（总数不变）
-});
-
-// 页面加载时的初始化（替换掉旧的只打印日志的占位符）
-function renderAll() {
-    const list = window.getAnimeList();      // 成员A：获取数据
-    renderCards(list);                       // 成员C：第一次显示所有卡片
-    updateStats(list);                       // 成员D：第一次更新统计数字
-}
-
-// 页面加载时执行
-document.addEventListener('DOMContentLoaded', renderAll);
-
-
-
-function renderAll() {
-    console.log('✅ 页面已加载，等待各模块合并完成...');
-}
-
-document.addEventListener('DOMContentLoaded', renderAll);
-
-//  第一部分：数据层（localStorage 存储引擎）
-const STORAGE_KEY = 'animeTracker';
-
-const DEFAULT_DATA = [
-    { id: 1, name: '葬送的芙莉莲', total: 28, current: 12, status: 'watching' },
-    { id: 2, name: '迷宫饭', total: 24, current: 24, status: 'completed' },
-    { id: 3, name: '药屋少女的呢喃', total: 24, current: 5, status: 'watching' },
-];
-
-function getAnimeList() {
-    const data = localStorage.getItem(STORAGE_KEY);
-    if (!data) {
-        localStorage.setItem(STORAGE_KEY, JSON.stringify(DEFAULT_DATA));
-        return DEFAULT_DATA;
-    }
-    try { return JSON.parse(data); } catch { return DEFAULT_DATA; }
-}
-
-function saveAnimeList(list) {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(list));
-}
-
-function generateId() {
-    return Date.now() + Math.random() * 1000;
-}
-
-function calcStatus(current, total) {
-    if (current >= total) return 'completed';
-    if (current === 0) return 'plan';
-    return 'watching';
-}
-
 // 导出供其他函数使用（全局挂载）
 window.getAnimeList = getAnimeList;
 window.saveAnimeList = saveAnimeList;
 window.generateId = generateId;
 window.calcStatus = calcStatus;
+
+
 
 
 function setupAddForm() {
@@ -151,7 +88,7 @@ function setupAddForm() {
 }
 
 document.addEventListener('DOMContentLoaded', setupAddForm);
-
+//  第三部分：卡片渲染与进度更新
 
 function renderCards(list) {
     const container = document.getElementById('cardList');
@@ -200,7 +137,7 @@ function renderCards(list) {
         btn.addEventListener('click', function() {
             const card = this.closest('.card');
             const id = parseFloat(card.dataset.id);
-            if (confirm('确定要删除这部番吗？')) {
+            if (confirm('确定要删除这部番剧吗？')) {
                 window.dispatchEvent(new CustomEvent('deleteAnime', { detail: { id } }));
             }
         });
@@ -232,7 +169,7 @@ function handleDelete(e) {
 document.addEventListener('increaseEpisode', handleIncrease);
 document.addEventListener('deleteAnime', handleDelete);
 
-
+//  第四部分：Tab 筛选与统计
 
 let currentFilter = 'all';
 
@@ -259,3 +196,40 @@ function updateStats(list) {
 }
 
 document.addEventListener('DOMContentLoaded', setupTabs);
+
+
+// 启动器
+
+// 监听数据变化：只要数据变了（添加、+1、删除），就自动重新渲染列表和统计
+document.addEventListener('dataChanged', function() {
+    const list = window.getAnimeList();      // 成员A：获取数据
+    renderCards(list);                       // 成员C：渲染卡片
+    updateStats(list);                       // 成员D：更新统计
+});
+
+// 监听筛选变化：点击 Tab 时，重新渲染筛选后的列表
+document.addEventListener('filterChanged', function() {
+    const list = window.getAnimeList();      // 成员A：获取数据
+    const filtered = getFilteredList(list);  // 成员D：按当前 Tab 筛选
+    renderCards(filtered);                   // 成员C：渲染筛选后的卡片
+    updateStats(list);                       // 成员D：更新统计（总数不变）
+});
+
+// 页面加载时的初始化（替换掉旧的只打印日志的占位符）
+function renderAll() {
+    const list = window.getAnimeList();      // 成员A：获取数据
+    renderCards(list);                       // 成员C：第一次显示所有卡片
+    updateStats(list);                       // 成员D：第一次更新统计数字
+}
+
+// 页面加载时执行
+document.addEventListener('DOMContentLoaded', renderAll);
+
+
+
+function renderAll() {
+    console.log('✅ 页面已加载，等待各模块合并完成...');
+}
+
+document.addEventListener('DOMContentLoaded', renderAll);
+
